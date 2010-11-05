@@ -21,11 +21,7 @@ class org_midgardproject_documentation_controllers_documentation
     private function prepare_component($component)
     {
         $this->data['component'] = $component;
-        try
-        {
-            $this->component = midgardmvc_core::get_instance()->component->get($this->data['component']);
-        }
-        catch (Exception $e)
+        if (!isset(midgardmvc_core::get_instance()->configuration->documentation_components[$this->data['component']]))
         {
             throw new midgardmvc_exception_notfound("Component {$this->data['component']} not found");
         }
@@ -83,13 +79,13 @@ class org_midgardproject_documentation_controllers_documentation
 
     public function get_index(array $args)
     {
-        $components = midgardmvc_core::get_instance()->component->get_components();
+        $components = midgardmvc_core::get_instance()->configuration->documentation_components;
         $this->data['components'] = array();
-        foreach ($components as $component)
+        foreach ($components as $component => $label)
         {
             $component_info = array();
-            $component_info['name'] = $component->name;
-            $component_info['url'] = midgardmvc_core::get_instance()->dispatcher->generate_url('omd_component', array('component' => $component->name), $this->request);
+            $component_info['name'] = $label;
+            $component_info['url'] = midgardmvc_core::get_instance()->dispatcher->generate_url('omd_component', array('component' => $component), $this->request);
             $this->data['components'][] = $component_info;
         }
     }
@@ -98,7 +94,7 @@ class org_midgardproject_documentation_controllers_documentation
     {
         $this->prepare_component($args['component'], $this->data);
 
-        $this->data['description'] = $this->component->get_description();
+        $this->data['description'] = '';
 
         $this->data['files'] = $this->list_directory($this->data['component'], MIDGARDMVC_ROOT . "/{$this->data['component']}/documentation");
     }
