@@ -65,12 +65,21 @@ class org_midgardproject_documentation_controllers_documentation
             {
                 // We're only interested in Markdown files
                 continue;
-            };
+            }
+
+            if ($pathinfo['filename'] == 'index')
+            {
+                $files['files'][] = array
+                (
+                    'label' => ucfirst(str_replace('_', ' ', basename($path))),
+                    'url' => midgardmvc_core::get_instance()->dispatcher->generate_url('omd_show', array('variable_arguments' => explode('/', "{$component}/{$prefix}")), $this->request),
+                );
+                continue;
+            }
             $files['files'][] = array
             (
                 'label' => ucfirst(str_replace('_', ' ', $pathinfo['filename'])),
                 'url' => midgardmvc_core::get_instance()->dispatcher->generate_url('omd_show', array('variable_arguments' => explode('/', "{$component}/{$prefix}{$pathinfo['filename']}")), $this->request),
-                'path' => "{$prefix}{$pathinfo['filename']}/",
             );
         }
         $directory->close();
@@ -85,16 +94,14 @@ class org_midgardproject_documentation_controllers_documentation
         {
             $component_info = array();
             $component_info['name'] = $label;
-            $component_info['url'] = midgardmvc_core::get_instance()->dispatcher->generate_url('omd_component', array('component' => $component), $this->request);
+            $component_info['url'] = midgardmvc_core::get_instance()->dispatcher->generate_url('omd_show', array('variable_arguments' => array($component)), $this->request);
             $this->data['components'][] = $component_info;
         }
     }
 
-    public function get_component(array $args)
+    public function get_navigation(array $args)
     {
         $this->prepare_component($args['component'], $this->data);
-
-        $this->data['description'] = '';
 
         $this->data['files'] = $this->list_directory($this->data['component'], MIDGARDMVC_ROOT . "/{$this->data['component']}/documentation");
     }
@@ -125,7 +132,15 @@ class org_midgardproject_documentation_controllers_documentation
             midgardmvc_core::get_instance()->dispatcher->end_request();
         }
 
-        $path .= '.markdown';
+        if (is_dir($path))
+        {
+            $path .= '/index.markdown';
+        }
+        else
+        {
+            $path .= '.markdown';
+        }
+
         if (!file_exists($path))
         {
             throw new midgardmvc_exception_notfound("File not found");

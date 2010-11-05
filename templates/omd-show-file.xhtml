@@ -1,2 +1,8 @@
+<nav class="news" tal:content="structure php:midgardmvc.templating.dynamic_load('org_midgardproject_documentation', 'omd_navigation', array('component' => current_component['component']))">
+    <ul>
+        <li>Foo</li>
+        <li>Bar</li>
+    </ul>
+</nav>
 <div tal:content="structure org_midgardproject_documentation/markdown_formatted">
 </div>

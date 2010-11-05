@@ -1,7 +1,3 @@
-<h1 tal:content="org_midgardproject_documentation/component">Component</h1>
-
-<p tal:content="structure org_midgardproject_documentation/description"></p>
-
 <ul metal:define-macro="omd-show-documentation_index">
     <li tal:repeat="file files/files">
         <a href="#" tal:attributes="href file/url" tal:content="file/label">Filename</a>
