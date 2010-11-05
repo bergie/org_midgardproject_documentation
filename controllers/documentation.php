@@ -123,16 +123,10 @@ class org_midgardproject_documentation_controllers_documentation
         {
             // Image or other non-Markdown doc file, pass directly
             $extension = pathinfo($path, PATHINFO_EXTENSION);
-            $mimetype = 'application/octet-stream';
-            switch ($extension)
-            {
-                case 'png':
-                    $mimetype = 'image/png';
-                    break;
-            }
+            $mimetype = mime_content_type($path);
             midgardmvc_core::get_instance()->dispatcher->header("Content-type: {$mimetype}");
             readfile($path);
-            die();
+            midgardmvc_core::get_instance()->dispatcher->end_request();
         }
 
         $path .= '.markdown';
