@@ -1,0 +1,27 @@
+version: 0.0.1
+routes:
+    index:
+        controller: org_midgardproject_documentation_controllers_documentation
+        action: index
+        path: '/'
+        template_aliases: 
+            content: omd-show-index
+    omd_navigation:
+        controller: org_midgardproject_documentation_controllers_documentation
+        action: index
+        path: '/navigation/{$type}'
+        root_only: true
+        template_aliases: 
+            content: omd-show-navigation
+    omd_component:
+        controller: org_midgardproject_documentation_controllers_documentation
+        action: component
+        path: '/{$component}'
+        template_aliases: 
+            content: omd-show-component
+    omd_show:
+        controller: org_midgardproject_documentation_controllers_documentation
+        action: show
+        path: '/show@'
+        template_aliases: 
+            content: omd-show-file

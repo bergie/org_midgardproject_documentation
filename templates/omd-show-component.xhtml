@@ -1,0 +1,17 @@
+<h1 tal:content="org_midgardproject_documentation/component">Component</h1>
+
+<p tal:content="structure org_midgardproject_documentation/description"></p>
+
+<ul metal:define-macro="omd-show-documentation_index">
+    <li tal:repeat="file files/files">
+        <a href="#" tal:attributes="href file/url" tal:content="file/label">Filename</a>
+    </li>
+    <tal:block tal:repeat="folder files/folders">
+        <li tal:condition="folder/files">
+            <tal:block tal:content="folder/label">Foldername</tal:block>
+            <tal:block tal:define="files folder" metal:use-macro="omd-show-documentation_index" />
+        </li>
+    </tal:block>
+</ul>
+
+<tal:block metal:use-macro="omd-show-documentation_index" tal:define="files org_midgardproject_documentation/files" />
